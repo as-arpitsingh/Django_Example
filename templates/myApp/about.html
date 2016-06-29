@@ -1,0 +1,10 @@
+{% extends 'myApp/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}About{% endblock %}
+
+{% block body_block %}
+        <strong>{{ boldmessage }}</strong><br />
+        <img src="{% static "images/gApple.png" %}" alt="Picture of Red Apple" />
+{% endblock %}

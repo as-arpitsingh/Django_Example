@@ -1,0 +1,23 @@
+{% extends 'myApp/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Home{% endblock %}
+
+{% block body_block %}
+  {% if user.is_authenticated %}
+  <h1>hello {{ user.username }}!</h1>
+  {% else %}
+  <h1>hello world!</h1>
+  {% endif %}
+
+  {% if categories %}
+    <ul>
+      {% for category in categories %}
+        <li><a href="{% url 'category'  category.slug %}">{{ category.name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <strong>There are no categories present.</strong>
+  {% endif %}
+{% endblock %}
