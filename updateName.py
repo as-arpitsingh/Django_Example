@@ -26,3 +26,5 @@ for root, dir, files in os.walk(path):
             updatedFile.close()
         else:
             pass
+
+# modify the file name as well
