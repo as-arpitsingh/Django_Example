@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from myApp.models import Category, Page
 from django.shortcuts import render
 from datetime import datetime
+from myApp.bing_search import run_query
+
 
 ###################
 def index(request):
@@ -144,6 +146,20 @@ def restricted(request):
     context_dict = {'boldmessage': "This is a Restricted Page!"}
     return render(request, 'myApp/restricted.html', context_dict)
 
+
+####################
+def search(request):
+
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'myApp/search.html', {'result_list': result_list})
 
 #########################
 # @login_required

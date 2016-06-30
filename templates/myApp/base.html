@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-    <title>myApp - {% block title %}How to Tango with Django!{% endblock %}</title>
+    <title>myApp - {% block title %}Project Name!{% endblock %}</title>
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
@@ -32,6 +32,7 @@
           <ul class="nav navbar-nav navbar-right">
                 <li><a href="{% url 'index' %}">Home</a></li>
                     {% if user.is_authenticated %}
+                        <li><a href="{% url 'search' %}">Search</a></li>
                         <li><a href="{% url 'restricted' %}">Restricted Page</a></li>
                         <li><a href="{% url 'auth_logout' %}?next=/myApp/">Logout</a></li>
                         <li><a href="{% url 'add_category' %}">Add a New Category</a></li>
