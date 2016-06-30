@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-LOGIN_URL = '/myApp/login/'
+LOGIN_URL = '/accounts/login/'
 
 STATIC_URL = '/static/'
 STATIC_PATH = os.path.join(BASE_DIR,'static')
@@ -45,6 +45,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Absolute path to the media direct
 
 ALLOWED_HOSTS = []
 
+REGISTRATION_OPEN = True
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+LOGIN_REDIRECT_URL = '/myApp/'
+LOGIN_URL = '/accounts/login/'
 
 # Application definition
 
@@ -56,6 +61,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myApp',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,6 +78,8 @@ ROOT_URLCONF = 'myProj.urls'
 
 WSGI_APPLICATION = 'myProj.wsgi.application'
 
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 3600
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
