@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from myApp.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.http import HttpResponseRedirect, HttpResponse
 from myApp.models import Category, Page
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime
 from myApp.bing_search import run_query
+
+
 
 
 ###################
@@ -49,16 +51,31 @@ def about(request):
 ##########################################
 def category(request, category_name_slug):
     context_dict = {}
+    context_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
+
     try:
         category = Category.objects.get(slug=category_name_slug)
         context_dict['category_name'] = category.name
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
         pass
-    return render(request, 'myApp/category.html', context_dict)
 
+    if not context_dict['query']:
+        context_dict['query'] = category.name
+
+    return render(request, 'myApp/category.html', context_dict)
 ##########################
 @login_required
 def add_category(request):
@@ -160,6 +177,71 @@ def search(request):
             result_list = run_query(query)
 
     return render(request, 'myApp/search.html', {'result_list': result_list})
+
+################
+@login_required
+def like_category(request):
+
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes =  likes
+            cat.save()
+
+    return HttpResponse(likes)
+
+
+
+################
+def track_url(request):
+    page_id = None
+    url = '/myApp/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
+
+    return redirect(url)
+
+
+#####################################################
+def get_category_list(max_results=0, starts_with=''):
+        cat_list = []
+        if starts_with:
+                cat_list = Category.objects.filter(name__istartswith=starts_with)
+
+        if max_results > 0:
+                if cat_list.count() > max_results:
+                        cat_list = cat_list[:max_results]
+
+        return cat_list
+
+
+
+##############################
+def suggest_category(request):
+
+        cat_list = []
+        starts_with = ''
+        if request.method == 'GET':
+                starts_with = request.GET['suggestion']
+
+        cat_list = get_category_list(8, starts_with)
+
+        return render(request, 'myApp/category_list.html', {'cat_list': cat_list })
+
 
 #########################
 # @login_required

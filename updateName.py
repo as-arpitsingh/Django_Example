@@ -1,7 +1,7 @@
 import os
 import re
 
-fileExtensions = ('.html','.py')
+fileExtensions = ('.html','.py', '.js')
 path = '/Users/arpitsingh/Documents/Python/py27-dj17/myProj'
 projNameOriginal = 'tango_with_django_project'
 projNameNew = 'myProj'
